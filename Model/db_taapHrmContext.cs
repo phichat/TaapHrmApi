@@ -19,6 +19,10 @@ namespace TaapHrmApi.Model
         public virtual DbSet<VtQuestion> VtQuestion { get; set; }
         public virtual DbSet<VtScore> VtScore { get; set; }
 
+        public virtual DbSet<HrmTestQuestion> HrmTestQuestions { get; set; }
+        public virtual DbSet<HrmTestChoice> HrmTestChoices { get; set; }
+        public virtual DbSet<HrmTestResult> HrmTestResults { get; set; }
+
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -96,6 +100,103 @@ namespace TaapHrmApi.Model
                 entity.Property(e => e.UserName)
                     .HasMaxLength(50)
                     .IsUnicode(false);
+            });
+            
+            modelBuilder.Entity<HrmTestQuestion>(entity =>
+            {
+                entity.HasKey(e => e.Id);
+
+                entity.ToTable("hrm_test_question");
+
+                entity.Property(e => e.Id)
+                      .HasColumnName("id");
+
+                entity.Property(e => e.QuestionType)
+                      .HasColumnName("question_type");
+
+                entity.Property(e => e.Question)
+                      .HasColumnName("question")
+                      .HasMaxLength(255);
+
+                entity.Property(e => e.Img)
+                      .HasColumnName("img")
+                      .IsUnicode(false);
+
+                entity.Property(e => e.ImgName)
+                      .HasColumnName("imgName")
+                      .HasMaxLength(255)
+                      .IsUnicode(false);
+
+                entity.Property(e => e.Answer)
+                      .HasColumnName("answer");
+
+                entity.Property(e => e.IsActive)
+                      .HasColumnName("is_active")
+                      .HasDefaultValue(1);
+
+                entity.Property(e => e.UpdateUserPosi)
+                      .HasColumnName("update_user_posi");
+
+                entity.Property(e => e.UpdateDatePosi)
+                      .HasColumnName("update_date_posi")
+                      .HasColumnType("datetime");
+
+            });
+
+            modelBuilder.Entity<HrmTestChoice>(entity =>
+            {
+                entity.HasKey(e => e.Id);
+
+                entity.ToTable("hrm_test_choice");
+
+                entity.Property(e => e.Id)
+                      .HasColumnName("id");
+
+                entity.Property(e => e.QuestionId)
+                      .HasColumnName("question_id");
+
+                entity.Property(e => e.Choice)
+                      .HasColumnName("choice")
+                      .HasMaxLength(255);
+
+                entity.Property(e => e.Img)
+                      .HasColumnName("img")
+                      .IsUnicode(false);
+
+                entity.Property(e => e.ImgName)
+                      .HasColumnName("imgName")
+                      .HasMaxLength(255)
+                      .IsUnicode(false);
+
+                entity.Property(e => e.IsActive)
+                      .HasColumnName("is_active")
+                      .HasDefaultValue(1);
+
+                entity.Property(e => e.UpdateDatePosi)
+                      .HasColumnName("update_date_posi")
+                      .HasColumnType("datetime");
+
+                entity.Property(e => e.UpdateUserPosi)
+                      .HasColumnName("update_user_posi");
+            });
+
+            modelBuilder.Entity<HrmTestResult>(entity =>
+            {
+                entity.HasKey(e => e.Id);
+
+                entity.ToTable("hrm_test_result");
+
+                entity.Property(e => e.Id)
+                      .HasColumnName("id");
+
+                entity.Property(e => e.Pass)
+                      .HasColumnName("pass");
+
+                entity.Property(e => e.Fail)
+                      .HasColumnName("fail");
+
+                entity.Property(e => e.Total)
+                      .HasColumnName("total");
             });
         }
     }

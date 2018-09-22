@@ -7,6 +7,8 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using MySql.Data.EntityFrameworkCore;
+using MySql.Data.EntityFrameworkCore.Extensions;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
@@ -32,8 +34,9 @@ namespace TaapHrmApi {
                     .AllowCredentials());
             });
 
-            services.AddDbContext<db_taapHrmContext> (options =>
-                options.UseSqlServer(Configuration.GetConnectionString ("taap-api")));
+            services.AddDbContext<db_taapHrmContext> (options => options.UseSqlServer(Configuration.GetConnectionString("taap-api")));
+
+            //services.AddDbContext<db_taapHrmContext>(options => options.UseMySQL(""));
 
             services.AddMvc ().SetCompatibilityVersion (CompatibilityVersion.Version_2_1);
             
@@ -43,6 +46,13 @@ namespace TaapHrmApi {
         public void Configure (IApplicationBuilder app, IHostingEnvironment env) {
             if (env.IsDevelopment ()) {
                 app.UseDeveloperExceptionPage ();
+                app.UseCors(builder =>
+                {
+                    builder.WithOrigins("http://localhost:4200")
+                           .AllowAnyOrigin()
+                           .AllowAnyHeader()
+                           .AllowAnyMethod();
+                });
             } else {
                 app.UseHsts ();
             }

@@ -20,13 +20,6 @@ namespace TaapHrmApi.Controllers
             ctx = context;
         }
 
-        // GET: api/VisualTest
-        [HttpGet]
-        public IEnumerable<string> Get()
-        {
-            return new string[] { "value1", "value2" };
-        }
-
         [HttpGet]
         public async Task<IActionResult> GetQuestionList()
         {
@@ -102,7 +95,7 @@ namespace TaapHrmApi.Controllers
             return Ok(score);
         }
 
-        [HttpPost]
+        [HttpPost(Name = "InsQuestion")]
         public async Task<IActionResult> InsQuestion([FromBody] ViewQuestion value)
         {
             if (!ModelState.IsValid)
@@ -156,7 +149,7 @@ namespace TaapHrmApi.Controllers
             }
         }
 
-        [HttpPost]
+        [HttpPost(Name = "ValidExamination")]
         public async Task<ActionResult<VtScore>> ValidExamination([FromBody] QuestionTest value)
         {
             if (!ModelState.IsValid)

@@ -19,6 +19,7 @@ namespace TaapHrmApi.Model
         public virtual DbSet<VtQuestion> VtQuestion { get; set; }
         public virtual DbSet<VtScore> VtScore { get; set; }
 
+        public virtual DbSet<HrmTestQuestionSet> HrmTestQuestionSets { get; set; }
         public virtual DbSet<HrmTestQuestion> HrmTestQuestions { get; set; }
         public virtual DbSet<HrmTestChoice> HrmTestChoices { get; set; }
         public virtual DbSet<HrmTestResult> HrmTestResults { get; set; }
@@ -101,6 +102,33 @@ namespace TaapHrmApi.Model
                     .HasMaxLength(50)
                     .IsUnicode(false);
             });
+
+            modelBuilder.Entity<HrmTestQuestionSet>(entity =>
+            {
+                entity.HasKey(e => e.Id);
+
+                entity.ToTable("hrm_test_question_set");
+
+                entity.Property(e => e.Id)
+                      .HasColumnName("id");
+
+                entity.Property(e => e.QuestionSet)
+                      .HasColumnName("question_set")
+                      .HasMaxLength(255);
+
+                entity.Property(e => e.TimeOut)
+                      .HasColumnName("time_out");
+
+                entity.Property(e => e.IsActive)
+                      .HasColumnName("is_active")
+                      .HasDefaultValue(1);
+
+                entity.Property(e => e.UpdateDatePosi)
+                      .HasColumnName("update_date_posi");
+
+                entity.Property(e => e.UpdateUserPosi)
+                      .HasColumnName("update_user_posi");
+            });
             
             modelBuilder.Entity<HrmTestQuestion>(entity =>
             {
@@ -111,8 +139,8 @@ namespace TaapHrmApi.Model
                 entity.Property(e => e.Id)
                       .HasColumnName("id");
 
-                entity.Property(e => e.QuestionType)
-                      .HasColumnName("question_type");
+                entity.Property(e => e.QuestionSetId)
+                      .HasColumnName("question_set_id");
 
                 entity.Property(e => e.Question)
                       .HasColumnName("question")
@@ -188,6 +216,13 @@ namespace TaapHrmApi.Model
 
                 entity.Property(e => e.Id)
                       .HasColumnName("id");
+
+                entity.Property(e => e.UserId)
+                      .HasColumnName("user_id");
+
+                entity.Property(e => e.QuestionSet)
+                      .HasColumnName("question_set")
+                      .HasMaxLength(255);
 
                 entity.Property(e => e.Pass)
                       .HasColumnName("pass");

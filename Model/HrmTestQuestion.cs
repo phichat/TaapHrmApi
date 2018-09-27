@@ -4,7 +4,7 @@ namespace TaapHrmApi.Model
     public class HrmTestQuestion
     {
         public int Id { get; set; }
-        public int QuestionType { get; set; }
+        public int QuestionSetId { get; set; }
         public string Question { get; set; }
         public string Img { get; set; }
         public string ImgName { get; set; }
@@ -14,24 +14,31 @@ namespace TaapHrmApi.Model
         public DateTime UpdateDatePosi { get; set; }
     }
 
+    public class HrmTestQuestionSetResponse {
+        public int QuestionSetId { get; set; }
+        public string QuestionSet { get; set; } 
+        public int TimeOut { get; set; }
+        public HrmTestQuestionList[] QuestionList { get; set; }
+    }
+
     public class HrmTestQuestionList {
         public int Id { get; set; }
-        public int QuestionType { get; set; }
-        public string QuestionTypeDesc { get; set; }
         public string Question { get; set; }
         public string ImgName { get; set; }
         public int IsActive { get; set; }
-        public string IsActiveDesc { get; set; }
     }
 
     public class HrmTestQuestionFormBody
     {
         public int Id { get; set; }
-        public int QuestionType { get; set; }
+        public int QuestionSetId { get; set; }
+        public string QuestionSet { get; set; }
+        public int TimeOut { get; set; }
         public string Question { get; set; }
         public string Img { get; set; }
         public string ImgName { get; set; }
         public int? Answer { get; set; }
+        public int? IsActive { get; set; }
         public int UpdateUserPosi { get; set; }
         public HrmTestChoice[] Choice { get; set; }
     }

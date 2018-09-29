@@ -27,7 +27,7 @@ namespace TaapHrmApi.Controllers
             var qs = ctx.HrmTestQuestionSets.Where(x => x.Id == id)
                         .Select(x => new HrmTestQuestionSetResponse
                         {
-                            QuestionSetId = x.Id,
+                            Id = x.Id,
                             QuestionSet = x.QuestionSet,
                             TimeOut = x.TimeOut,
                             QuestionList = null
@@ -48,35 +48,52 @@ namespace TaapHrmApi.Controllers
             return Ok(qs);
         }
 
+        [HttpGet("GetListQuestionSet")]
+        public IActionResult GetListQuestionSet() {
+            var qs = ctx.HrmTestQuestionSets
+                        .OrderBy(x => x.Id)
+                        .OrderByDescending(x => x.IsActive)
+                        .ToList();
+            return Ok(qs);
+        }
+
         [HttpGet("GetQuestionRandom")]
-        public async Task<IActionResult> GetQuestionRandom() {
+        public async Task<IActionResult> GetQuestionRandom(int id) {
             try
             {
+                var qs = (from tq in ctx.HrmTestQuestionSets
+                          where tq.Id == id
+                          select new HrmTestQuestionSetRandom
+                          {
+                              Id = tq.Id,
+                              QuestionSet = tq.QuestionSet,
+                              TimeOut = tq.TimeOut
+                          }).FirstOrDefault();
+
+                if (qs == null) return NotFound();
 
                 var q = await (from tq in ctx.HrmTestQuestions
-
-                               join qs in ctx.HrmTestQuestionSets on tq.QuestionSetId equals qs.Id into a1
-                               from question in a1.DefaultIfEmpty()
-
+                               where tq.QuestionSetId == id && tq.IsActive == 1
                                select new HrmTestQuestionFormBody
                                {
                                    Id = tq.Id,
-                                   QuestionSet = question.QuestionSet,
+                                   QuestionSetId = tq.QuestionSetId,
                                    Question = tq.Question,
                                    Img = tq.Img,
                                    ImgName = tq.ImgName,
                                    Answer = null,
                                    UpdateUserPosi = tq.UpdateUserPosi
                                })
-                    .OrderBy(x => Guid.NewGuid())
-                    .Take(20)
+                    .OrderBy(x=> Guid.NewGuid())
                     .ToListAsync();
 
                 foreach(var qt in q) {
-                    qt.Choice = ctx.HrmTestChoices.Where(x => x.QuestionId == qt.Id).ToArray();
+                    qt.Choice = await ctx.HrmTestChoices.Where(x => x.QuestionId == qt.Id && x.IsActive == 1).ToArrayAsync();
                 }
 
-                return Ok(q);
+                qs.Question = q.ToArray();
+
+                return Ok(qs);
 
             }
             catch (Exception ex)
@@ -96,14 +113,11 @@ namespace TaapHrmApi.Controllers
 
                          join qs in ctx.HrmTestQuestionSets on tq.QuestionSetId equals qs.Id into a1
                          from question in a1.DefaultIfEmpty()
-
                          where tq.Id == id
                          select new HrmTestQuestionFormBody
                          {
                              Id = tq.Id,
                              QuestionSetId = question.Id,
-                             QuestionSet = question.QuestionSet,
-                             TimeOut = question.TimeOut,
                              Question = tq.Question,
                              Img = tq.Img,
                              ImgName = tq.ImgName,
@@ -111,7 +125,7 @@ namespace TaapHrmApi.Controllers
                              UpdateUserPosi = tq.UpdateUserPosi
                          }).FirstOrDefault();
 
-                var choice = ctx.HrmTestChoices.Where(x => x.QuestionId == id).ToList();
+                var choice = ctx.HrmTestChoices.Where(x => x.QuestionId == id && x.IsActive == 1).ToList();
 
                 q.Choice = choice.ToArray();
 
@@ -126,7 +140,7 @@ namespace TaapHrmApi.Controllers
 
         // POST: api/Question
         [HttpPost("CreateQuestion")]
-        public IActionResult CreateQuestion([FromBody] HrmTestQuestionFormBody q)
+        public IActionResult CreateQuestion([FromBody] HrmTestQuestionSetFromBody qestionSet)
         {
 
             using (var transaction = ctx.Database.BeginTransaction())
@@ -136,20 +150,20 @@ namespace TaapHrmApi.Controllers
                     // Question set
                     var questionSet = new HrmTestQuestionSet();
 
-                    if (q.QuestionSetId == 0) {
-                        questionSet.QuestionSet = q.QuestionSet;
-                        questionSet.UpdateUserPosi = q.UpdateUserPosi;
-                        questionSet.TimeOut = q.TimeOut;
+                    if (qestionSet.Id == 0) {
+                        questionSet.QuestionSet = qestionSet.QuestionSet;
+                        questionSet.UpdateUserPosi = qestionSet.UpdateUserPosi;
+                        questionSet.TimeOut = qestionSet.TimeOut;
                         questionSet.UpdateDatePosi = DateTime.Now;
                         ctx.Add(questionSet);
                         ctx.SaveChanges();
                     } else {
-                        questionSet = ctx.HrmTestQuestionSets.SingleOrDefault(x => x.Id == q.QuestionSetId);
+                        questionSet = ctx.HrmTestQuestionSets.SingleOrDefault(x => x.Id == qestionSet.Id);
 
-                        if (questionSet.QuestionSet != q.QuestionSet) {
-                            questionSet.QuestionSet = q.QuestionSet;
-                            questionSet.TimeOut = q.TimeOut;
-                            questionSet.UpdateUserPosi = q.UpdateUserPosi;
+                        if (questionSet.QuestionSet != qestionSet.QuestionSet) {
+                            questionSet.QuestionSet = qestionSet.QuestionSet;
+                            questionSet.TimeOut = qestionSet.TimeOut;
+                            questionSet.UpdateUserPosi = qestionSet.UpdateUserPosi;
                             questionSet.UpdateDatePosi = DateTime.Now;
                             ctx.Update(questionSet);
                             ctx.SaveChanges();
@@ -157,6 +171,7 @@ namespace TaapHrmApi.Controllers
                     }
 
                     // Question
+                    var q = qestionSet.Question;
                     var question = new HrmTestQuestion();
 
                     question.QuestionSetId = questionSet.Id;
@@ -178,15 +193,24 @@ namespace TaapHrmApi.Controllers
                         choice.Img = c.Img;
                         choice.ImgName = c.ImgName;
                         choice.QuestionId = question.Id;
+                        choice.AnswerChoice = c.AnswerChoice;
                         choice.UpdateUserPosi = c.UpdateUserPosi;
                         choice.UpdateDatePosi = DateTime.Now;
                         ctx.Add(choice);
                     }   
                     ctx.SaveChanges();
 
+                    var questionRespose = new { 
+                        question.Id,
+                        question.QuestionSetId,
+                        question.Question,
+                        question.ImgName,
+                        question.IsActive
+                    };
+
                     transaction.Commit();
 
-                    return Ok(questionSet);
+                    return Ok(questionRespose);
 
                 }
                 catch (Exception ex)
@@ -201,20 +225,20 @@ namespace TaapHrmApi.Controllers
 
         // PUT: api/Question/5
         [HttpPut("UpdateQuestion")]
-        public IActionResult UpdateQuestion([FromBody] HrmTestQuestionFormBody q)
+        public IActionResult UpdateQuestion([FromBody] HrmTestQuestionSetFromBody qestionSet)
         {
             using(var transaction = ctx.Database.BeginTransaction()) {
                 try {
-                    var qs = ctx.HrmTestQuestionSets.SingleOrDefault(x => x.Id == q.QuestionSetId);
-                    qs.QuestionSet = q.QuestionSet;
-                    qs.TimeOut = q.TimeOut;
-                    qs.UpdateUserPosi = q.UpdateUserPosi;
+                    var qs = ctx.HrmTestQuestionSets.SingleOrDefault(x => x.Id == qestionSet.Id);
+                    qs.QuestionSet = qestionSet.QuestionSet;
+                    qs.TimeOut = qestionSet.TimeOut;
+                    qs.UpdateUserPosi = qestionSet.UpdateUserPosi;
                     qs.UpdateDatePosi = DateTime.Now;
                     ctx.Update(qs);
                     ctx.SaveChanges();
 
 
-                    // q.Id = QuestionId;
+                    var q = qestionSet.Question;
                     var question = ctx.HrmTestQuestions.SingleOrDefault(x => x.Id == q.Id);
                     question.Question = q.Question;
                     question.Img = q.Img;
@@ -235,6 +259,7 @@ namespace TaapHrmApi.Controllers
                             choice.Img = c.Img;
                             choice.ImgName = c.ImgName;
                             choice.QuestionId = question.Id;
+                            choice.AnswerChoice = c.AnswerChoice;
                             choice.UpdateUserPosi = c.UpdateUserPosi;
                             choice.UpdateDatePosi = DateTime.Now;
                             ctx.Add(choice);
@@ -245,6 +270,7 @@ namespace TaapHrmApi.Controllers
                             ct.Img = c.Img;
                             ct.ImgName = c.ImgName;
                             ct.QuestionId = question.Id;
+                            ct.AnswerChoice = c.AnswerChoice;
                             ct.UpdateUserPosi = c.UpdateUserPosi;
                             ct.UpdateDatePosi = DateTime.Now;
                             ctx.Update(ct);
@@ -254,7 +280,7 @@ namespace TaapHrmApi.Controllers
 
                     transaction.Commit();
 
-                    return Ok(qs);
+                    return Ok();
 
                 }
                 catch (Exception ex)

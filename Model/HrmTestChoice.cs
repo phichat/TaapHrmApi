@@ -9,6 +9,7 @@ namespace TaapHrmApi.Model
         public string Img { get; set; }
         public string ImgName { get; set; }
         public int IsActive { get; set; }
+        public int AnswerChoice { get; set; }
         public int UpdateUserPosi { get; set; }
         public DateTime UpdateDatePosi { get; set; }
     }

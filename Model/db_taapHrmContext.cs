@@ -200,6 +200,9 @@ namespace TaapHrmApi.Model
                       .HasColumnName("is_active")
                       .HasDefaultValue(1);
 
+                entity.Property(e => e.AnswerChoice)
+                      .HasColumnName("answer_choice");
+
                 entity.Property(e => e.UpdateDatePosi)
                       .HasColumnName("update_date_posi")
                       .HasColumnType("datetime");
@@ -220,9 +223,14 @@ namespace TaapHrmApi.Model
                 entity.Property(e => e.UserId)
                       .HasColumnName("user_id");
 
-                entity.Property(e => e.QuestionSet)
-                      .HasColumnName("question_set")
-                      .HasMaxLength(255);
+                entity.Property(e => e.QuestionSetId)
+                      .HasColumnName("question_set_id");
+
+                entity.Property(e => e.TimeOut)
+                      .HasColumnName("time_out");
+
+                entity.Property(e => e.TimeUse)
+                      .HasColumnName("time_use");
 
                 entity.Property(e => e.Pass)
                       .HasColumnName("pass");

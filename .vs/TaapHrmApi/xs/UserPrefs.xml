@@ -1,16 +1,17 @@
 ﻿<Properties StartupConfiguration="{4884E1A3-57F5-41F8-89C5-23392B9153F3}|Default">
-  <MonoDevelop.Ide.Workbench ActiveDocument="Controllers/QuestionController.cs">
+  <MonoDevelop.Ide.Workbench ActiveDocument="Model/HrmTestResult.cs">
     <Files>
-      <File FileName="Controllers/QuestionController.cs" Line="264" Column="56" />
-      <File FileName="Model/HrmTestQuestion.cs" Line="11" Column="40" />
-      <File FileName="Model/db_taapHrmContext.cs" Line="119" Column="49" />
-      <File FileName="Model/HrmTestQuestionSet.cs" Line="4" Column="35" />
-      <File FileName="Controllers/ValuesController.cs" Line="17" Column="55" />
+      <File FileName="Controllers/QuestionController.cs" Line="21" Column="10" />
+      <File FileName="Controllers/VerifyQuestion.cs" Line="31" Column="70" />
+      <File FileName="Model/HrmTestResult.cs" Line="17" Column="29" />
+      <File FileName="Model/db_taapHrmContext.cs" Line="233" Column="50" />
     </Files>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
   <MonoDevelop.Ide.DebuggingService.Breakpoints>
-    <BreakpointStore />
+    <BreakpointStore>
+      <Breakpoint file="/Users/phichet/Projects/taap-hrm/TaapHrmApi/Controllers/VerifyQuestion.cs" relfile="Controllers/VerifyQuestion.cs" line="34" column="1" />
+    </BreakpointStore>
   </MonoDevelop.Ide.DebuggingService.Breakpoints>
   <MonoDevelop.Ide.DebuggingService.PinnedWatches />
   <MultiItemStartupConfigurations />

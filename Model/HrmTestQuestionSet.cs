@@ -16,6 +16,21 @@ namespace TaapHrmApi.Model
         public string QuestionSet { get; set; }
         public int TimeOut { get; set; }
         public int UpdateUserPosi { get; set; }
-        public 
+        public HrmTestQuestionFormBody Question { get; set; }
+    }
+
+    public class HrmTestQuestionSetResponse
+    {
+        public int Id { get; set; }
+        public string QuestionSet { get; set; }
+        public int TimeOut { get; set; }
+        public HrmTestQuestionList[] QuestionList { get; set; }
+    }
+
+    public class HrmTestQuestionSetRandom {
+        public int Id { get; set; }
+        public string QuestionSet { get; set; }
+        public int TimeOut { get; set; }
+        public HrmTestQuestionFormBody[] Question { get; set; }
     }
 }

@@ -14,13 +14,6 @@ namespace TaapHrmApi.Model
         public DateTime UpdateDatePosi { get; set; }
     }
 
-    public class HrmTestQuestionSetResponse {
-        public int QuestionSetId { get; set; }
-        public string QuestionSet { get; set; } 
-        public int TimeOut { get; set; }
-        public HrmTestQuestionList[] QuestionList { get; set; }
-    }
-
     public class HrmTestQuestionList {
         public int Id { get; set; }
         public string Question { get; set; }
@@ -32,8 +25,6 @@ namespace TaapHrmApi.Model
     {
         public int Id { get; set; }
         public int QuestionSetId { get; set; }
-        public string QuestionSet { get; set; }
-        public int TimeOut { get; set; }
         public string Question { get; set; }
         public string Img { get; set; }
         public string ImgName { get; set; }

@@ -78,12 +78,18 @@ namespace TaapHrmApi.Controllers
 
         [HttpGet("GetQuestionResult")]
         public IActionResult GetQuestionResult(int questionSetId, int userId) {
+            try {
+                var result = ctx.HrmTestResults
+                                .OrderByDescending(x=>x.Id)
+                                .FirstOrDefault(x => x.QuestionSetId == questionSetId && x.UserId == userId);
 
-            var result = ctx.HrmTestResults.SingleOrDefault(x => x.QuestionSetId == questionSetId && x.UserId == userId);
+                if (result == null) return NotFound();
 
-            if (result == null) return NotFound();
+                return Ok(result);
 
-            return Ok(result);
+            } catch(Exception ex) {
+                return StatusCode(500, ex.Message);
+            }
         }
     }
 }

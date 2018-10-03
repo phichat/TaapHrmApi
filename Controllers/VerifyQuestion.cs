@@ -57,7 +57,7 @@ namespace TaapHrmApi.Controllers
                         {
                             QuestionId = qq.Id,
                             TestedQuestion = qq.Question,
-                            TestedAnswer = testedAnswer.Choice,
+                            TestedAnswer = testedAnswer != null ? testedAnswer.Choice : "",
                             Answer = answer.Choice,
                             Result = (qq.Answer == item.Answer) ? true : false
                         };
@@ -77,16 +77,6 @@ namespace TaapHrmApi.Controllers
                     }
 
                     // 2 บันทึกแบบทดสอบ
-                    var result = new HrmTestResult
-                    {
-                        UserId = value.UserId,
-                        QuestionSetId = value.QuestionSetId,
-                        TimeOut = value.TimeOut,
-                        TimeUse = value.TimeUse,
-                        Pass = pass,
-                        Fail = fail,
-                        Total = totalQuestion
-                    };
                     // 2.1 เช็คว่ามีบันทึกแบบทดสอบ แล้วหรือไม่
                     var checkResult = ctx.HrmTestResults.SingleOrDefault(x => x.UserId == value.UserId && x.QuestionSetId == value.QuestionSetId);
 
@@ -94,17 +84,36 @@ namespace TaapHrmApi.Controllers
                     // 2.3 ถ้าไม่มีให้บันทึก
                     if (checkResult != null)
                     {
-                        ctx.HrmTestResults.Add(result);
+                        checkResult.UserId = value.UserId;
+                        checkResult.QuestionSetId = value.QuestionSetId;
+                        checkResult.TimeOut = value.TimeOut;
+                        checkResult.TimeUse = value.TimeUse;
+                        checkResult.Pass = pass;
+                        checkResult.Fail = fail;
+                        checkResult.Total = totalQuestion;
+
+                        ctx.HrmTestResults.Update(checkResult);
                         ctx.SaveChanges();
                     }
                     else
                     {
-                        ctx.HrmTestResults.Update(result);
+                        checkResult = new HrmTestResult
+                        {
+                            UserId = value.UserId,
+                            QuestionSetId = value.QuestionSetId,
+                            TimeOut = value.TimeOut,
+                            TimeUse = value.TimeUse,
+                            Pass = pass,
+                            Fail = fail,
+                            Total = totalQuestion
+                        };
+
+                        ctx.HrmTestResults.Add(checkResult);
                         ctx.SaveChanges();
                     }
 
                     // 3 ตรวจสอบว่า กรายละเอียดการทำแบบทดสอบ แล้วหรือไม่
-                    var checkResultDetail = ctx.HrmTestResultDetails.Where(x => x.TestResultId == result.Id).ToList();
+                    var checkResultDetail = ctx.HrmTestResultDetails.Where(x => x.TestResultId == checkResult.Id).ToList();
 
                     // 3.1 ถ้ามีแล้ว ลบของเดิมทิ้ง
                     if (checkResultDetail != null)
@@ -116,7 +125,7 @@ namespace TaapHrmApi.Controllers
                     // 3.2 บันทึกรายละเอียดการทำแบบทดสอบใหม่เข้าไป
                     resultDetail.ForEach(x =>
                     {
-                        x.TestResultId = result.Id;
+                        x.TestResultId = checkResult.Id;
                     });
                     ctx.HrmTestResultDetails.AddRange(resultDetail);
                     ctx.SaveChanges();

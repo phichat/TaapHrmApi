@@ -23,6 +23,8 @@ namespace TaapHrmApi.Model
         public virtual DbSet<HrmTestQuestion> HrmTestQuestions { get; set; }
         public virtual DbSet<HrmTestChoice> HrmTestChoices { get; set; }
         public virtual DbSet<HrmTestResult> HrmTestResults { get; set; }
+        public virtual DbSet<HrmTestResultDetail> HrmTestResultDetails { get; set; }
+        public virtual DbSet<HrmUser> HrmUsers { get; set; }
 
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -240,6 +242,95 @@ namespace TaapHrmApi.Model
 
                 entity.Property(e => e.Total)
                       .HasColumnName("total");
+            });
+
+            modelBuilder.Entity<HrmUser>(entity =>
+            {
+                entity.HasKey(e => e.Id);
+
+                entity.ToTable("hrm_user");
+
+                entity.Property(e => e.UserName)
+                      .HasColumnName("username")
+                      .HasMaxLength(150);
+
+                entity.Property(e => e.Password)
+                      .HasColumnName("password")
+                      .HasMaxLength(255);
+
+                entity.Property(e => e.FullName)
+                      .HasColumnName("fullname")
+                      .HasMaxLength(100);
+
+                entity.Property(e => e.Email)
+                      .HasColumnName("email")
+                      .HasMaxLength(100);
+
+                entity.Property(e => e.UserType)
+                      .HasColumnName("user_type");
+
+                entity.Property(e => e.CrDate)
+                      .HasColumnName("crdate")
+                      .HasColumnType("datetime");
+
+                entity.Property(e => e.Enable)
+                      .HasColumnName("enable")
+                      .HasMaxLength(1);
+
+                entity.Property(e => e.ComId)
+                      .HasColumnName("com_id");
+
+                entity.Property(e => e.Level)
+                      .HasColumnName("level")
+                      .HasMaxLength(10);
+
+                entity.Property(e => e.UserExpdate)
+                      .HasColumnName("user_expdate")
+                      .HasColumnType("date");
+
+                entity.Property(e => e.UserSme)
+                      .HasColumnName("user_sme");
+
+                entity.Property(e => e.Tel)
+                      .HasColumnName("tel")
+                      .HasMaxLength(10);
+
+                entity.Property(e => e.UserIt)
+                      .HasColumnName("user_it")
+                      .HasMaxLength(150);
+
+            });
+
+            modelBuilder.Entity<HrmTestResultDetail>(entity =>
+            {
+                entity.HasKey(e => e.Id);
+
+                entity.ToTable("hrm_test_result_detail");
+
+                entity.Property(e => e.Id)
+                      .HasColumnName("id");
+
+                entity.Property(e => e.TestResultId)
+                      .HasColumnName("test_result_id");
+
+                entity.Property(e => e.QuestionId)
+                      .HasColumnName("question_id");
+
+                entity.Property(e => e.TestedQuestion)
+                      .HasColumnName("tested_question")
+                      .HasMaxLength(255);
+
+                entity.Property(e => e.TestedAnswer)
+                      .HasColumnName("tested_answer")
+                      .HasMaxLength(255);
+
+                entity.Property(e => e.Answer)
+                      .HasColumnName("answer")
+                      .HasMaxLength(255);
+
+                entity.Property(e => e.Result)
+                      .HasColumnName("result")
+                      .HasColumnType("bit");
             });
         }
     }

@@ -30,48 +30,106 @@ namespace TaapHrmApi.Controllers
         [HttpPost("CreateVerifyQuestion")]
         public IActionResult CreateVerifyQuestion([FromBody]HrmTestVerifyQuestion value)
         {
-            try {
-                var questions = value.Questions;
+            using (var trans = ctx.Database.BeginTransaction())
+            {
 
-                var q = ctx.HrmTestQuestions.Where(x => x.QuestionSetId == value.QuestionSetId).ToList();
-
-                var pass = 0;
-                var fail = 0;
-                var totalQuestion = 0;
-                foreach (var item in questions)
+                try
                 {
+                    var questions = value.Questions;
 
-                    var qq = q.SingleOrDefault(x => x.Id == item.QuestionId);
-
-                    totalQuestion += 1;
-                    if (qq.Answer == item.Answer)
+                    // 1 ตรวจแบบทดสอบ
+                    var resultDetail = new List<HrmTestResultDetail>();
+                    var pass = 0;
+                    var fail = 0;
+                    var totalQuestion = 0;
+                    foreach (var item in questions)
                     {
-                        // Pass
-                        pass += 1;
+                        // คำถาม
+                        var qq = ctx.HrmTestQuestions.SingleOrDefault(x => x.Id == item.QuestionId);
+
+                        // คำตอบที่ ผู้ทดสอบเลือก 
+                        var testedAnswer = ctx.HrmTestChoices.SingleOrDefault(x => x.QuestionId == item.QuestionId && x.AnswerChoice == item.Answer);
+
+                        // คำตอบที่ถูกต้อง
+                        var answer = ctx.HrmTestChoices.SingleOrDefault(x => x.QuestionId == qq.Id && x.AnswerChoice == qq.Answer);
+
+                        var rd = new HrmTestResultDetail
+                        {
+                            QuestionId = qq.Id,
+                            TestedQuestion = qq.Question,
+                            TestedAnswer = testedAnswer.Choice,
+                            Answer = answer.Choice,
+                            Result = (qq.Answer == item.Answer) ? true : false
+                        };
+                        resultDetail.Add(rd);
+
+                        totalQuestion += 1;
+                        if (qq.Answer == item.Answer)
+                        {
+                            // Pass
+                            pass += 1;
+                        }
+                        else
+                        {
+                            // Fail
+                            fail += 1;
+                        }
+                    }
+
+                    // 2 บันทึกแบบทดสอบ
+                    var result = new HrmTestResult
+                    {
+                        UserId = value.UserId,
+                        QuestionSetId = value.QuestionSetId,
+                        TimeOut = value.TimeOut,
+                        TimeUse = value.TimeUse,
+                        Pass = pass,
+                        Fail = fail,
+                        Total = totalQuestion
+                    };
+                    // 2.1 เช็คว่ามีบันทึกแบบทดสอบ แล้วหรือไม่
+                    var checkResult = ctx.HrmTestResults.SingleOrDefault(x => x.UserId == value.UserId && x.QuestionSetId == value.QuestionSetId);
+
+                    // 2.2 ถ้ามีให้อัพเดท
+                    // 2.3 ถ้าไม่มีให้บันทึก
+                    if (checkResult != null)
+                    {
+                        ctx.HrmTestResults.Add(result);
+                        ctx.SaveChanges();
                     }
                     else
                     {
-                        // Fail
-                        fail += 1;
+                        ctx.HrmTestResults.Update(result);
+                        ctx.SaveChanges();
                     }
+
+                    // 3 ตรวจสอบว่า กรายละเอียดการทำแบบทดสอบ แล้วหรือไม่
+                    var checkResultDetail = ctx.HrmTestResultDetails.Where(x => x.TestResultId == result.Id).ToList();
+
+                    // 3.1 ถ้ามีแล้ว ลบของเดิมทิ้ง
+                    if (checkResultDetail != null)
+                    {
+                        ctx.HrmTestResultDetails.RemoveRange(checkResultDetail);
+                        ctx.SaveChanges();
+                    }
+
+                    // 3.2 บันทึกรายละเอียดการทำแบบทดสอบใหม่เข้าไป
+                    resultDetail.ForEach(x =>
+                    {
+                        x.TestResultId = result.Id;
+                    });
+                    ctx.HrmTestResultDetails.AddRange(resultDetail);
+                    ctx.SaveChanges();
+
+                    trans.Commit();
+
+                    return Ok();
                 }
-
-                var result = new HrmTestResult
+                catch (Exception ex)
                 {
-                    UserId = value.UserId,
-                    QuestionSetId = value.QuestionSetId,
-                    TimeOut = value.TimeOut,
-                    TimeUse = value.TimeUse,
-                    Pass = pass,
-                    Fail = fail,
-                    Total = totalQuestion
-                };
-                ctx.HrmTestResults.Add(result);
-                ctx.SaveChanges();
-
-                return Ok();
-            } catch(Exception ex) {
-                return StatusCode(500, ex.Message);
+                    trans.Rollback();
+                    return StatusCode(500, ex.Message);
+                }
             }
 
         }
@@ -79,11 +137,32 @@ namespace TaapHrmApi.Controllers
         [HttpGet("GetQuestionResult")]
         public IActionResult GetQuestionResult(int questionSetId, int userId) {
             try {
-                var result = ctx.HrmTestResults
-                                .OrderByDescending(x=>x.Id)
-                                .FirstOrDefault(x => x.QuestionSetId == questionSetId && x.UserId == userId);
+
+                var result = (from r in ctx.HrmTestResults
+                              join u in ctx.HrmUsers on r.UserId equals u.Id
+                              join q in ctx.HrmTestQuestionSets on r.QuestionSetId equals q.Id
+
+                              select new HrmTestVerifyQuestionResponse
+                              {
+                                  Id = r.Id,
+                                  QuestionSetId = r.QuestionSetId,
+                                  QuestionSet = q.QuestionSet,
+                                  TimeOut = r.TimeOut,
+                                  TimeUse = r.TimeUse,
+                                  UserId = r.UserId,
+                                  FullName = u.FullName,
+                                  Pass = r.Pass,
+                                  Fail = r.Fail,
+                                  Total = r.Total
+                              })
+                    .OrderByDescending(x => x.Id)
+                    .FirstOrDefault(x => x.QuestionSetId == questionSetId && x.UserId == userId);
 
                 if (result == null) return NotFound();
+
+                var resultDetail = ctx.HrmTestResultDetails.Where(x => x.TestResultId == result.Id).ToList();
+
+                result.ResultDetail = resultDetail.ToArray();
 
                 return Ok(result);
 

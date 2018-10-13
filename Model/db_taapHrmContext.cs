@@ -243,8 +243,6 @@ namespace TaapHrmApi.Model
                 entity.Property(e => e.Total)
                       .HasColumnName("total");
 
-                entity.Property(e => e.IsActive)
-                      .HasColumnName("is_active");
             });
 
             modelBuilder.Entity<HrmUser>(entity =>

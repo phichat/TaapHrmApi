@@ -11,6 +11,7 @@ namespace TaapHrmApi.Model
         public int Pass { get; set; }
         public int Fail { get; set; }
         public int Total { get; set; }
+        public int IsActive { get; set; }
     }
 
     public class HrmTestVerifyQuestion {

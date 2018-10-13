@@ -1,11 +1,9 @@
 ﻿<Properties StartupConfiguration="{4884E1A3-57F5-41F8-89C5-23392B9153F3}|Default">
-  <MonoDevelop.Ide.Workbench ActiveDocument="Controllers/VerifyQuestion.cs">
+  <MonoDevelop.Ide.Workbench ActiveDocument="Model/db_taapHrmContext.cs">
     <Files>
-      <File FileName="Model/db_taapHrmContext.cs" Line="314" Column="56" />
+      <File FileName="Model/db_taapHrmContext.cs" Line="247" Column="51" />
       <File FileName="Model/HrmUser.cs" Line="19" Column="43" />
-      <File FileName="Controllers/VerifyQuestion.cs" Line="101" Column="14" />
-      <File FileName="Model/HrmTestResult.cs" Line="40" Column="30" />
-      <File FileName="Model/HrmTestResultDetail.cs" Line="15" Column="1" />
+      <File FileName="Controllers/VerifyQuestion.cs" Line="112" Column="43" />
       <File FileName="Controllers/QuestionController.cs" Line="151" Column="31" />
     </Files>
   </MonoDevelop.Ide.Workbench>

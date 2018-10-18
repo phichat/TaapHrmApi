@@ -1,6 +1,7 @@
 ﻿using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata;
+using MySql.Data.EntityFrameworkCore.Extensions;
 
 namespace TaapHrmApi.Model
 {
@@ -15,10 +16,6 @@ namespace TaapHrmApi.Model
         {
         }
 
-        public virtual DbSet<VtChoice> VtChoice { get; set; }
-        public virtual DbSet<VtQuestion> VtQuestion { get; set; }
-        public virtual DbSet<VtScore> VtScore { get; set; }
-
         public virtual DbSet<HrmTestQuestionSet> HrmTestQuestionSets { get; set; }
         public virtual DbSet<HrmTestQuestion> HrmTestQuestions { get; set; }
         public virtual DbSet<HrmTestChoice> HrmTestChoices { get; set; }
@@ -29,85 +26,11 @@ namespace TaapHrmApi.Model
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<VtChoice>(entity =>
-            {
-                entity.ToTable("VT_Choice");
-
-                entity.Property(e => e.Id).ValueGeneratedNever();
-
-                entity.Property(e => e.Choice)
-                    .HasMaxLength(255)
-                    .IsUnicode(false);
-
-                entity.Property(e => e.CreateBy)
-                    .HasMaxLength(50)
-                    .IsUnicode(false);
-
-                entity.Property(e => e.CreateDate).HasColumnType("datetime");
-
-                entity.Property(e => e.ImgName)
-                    .HasMaxLength(255)
-                    .IsUnicode(false);
-
-                entity.Property(e => e.ImgSource).IsUnicode(false);
-
-                entity.Property(e => e.UpdateBy)
-                    .HasMaxLength(50)
-                    .IsUnicode(false);
-
-                entity.Property(e => e.UpdateDate).HasColumnType("datetime");
-            });
-
-            modelBuilder.Entity<VtQuestion>(entity =>
-            {
-                entity.ToTable("VT_Question");
-
-                entity.Property(e => e.Id).ValueGeneratedNever();
-
-                entity.Property(e => e.Answer)
-                    .IsUnicode(false);
-
-                entity.Property(e => e.CreateBy)
-                    .HasMaxLength(50)
-                    .IsUnicode(false);
-
-                entity.Property(e => e.CreateDate).HasColumnType("datetime");
-
-                entity.Property(e => e.ImgName)
-                    .HasMaxLength(255)
-                    .IsUnicode(false);
-
-                entity.Property(e => e.ImgSource).IsUnicode(false);
-
-                entity.Property(e => e.Question)
-                    .HasMaxLength(255)
-                    .IsUnicode(false);
-
-                entity.Property(e => e.UpdateBy)
-                    .HasMaxLength(50)
-                    .IsUnicode(false);
-
-                entity.Property(e => e.UpdateDate).HasColumnType("datetime");
-            });
-
-            modelBuilder.Entity<VtScore>(entity =>
-            {
-                entity.ToTable("VT_Score");
-
-                entity.Property(e => e.Id).ValueGeneratedNever();
-
-                entity.Property(e => e.CareerType)
-                    .HasMaxLength(50)
-                    .IsUnicode(false);
-
-                entity.Property(e => e.UserName)
-                    .HasMaxLength(50)
-                    .IsUnicode(false);
-            });
-
             modelBuilder.Entity<HrmTestQuestionSet>(entity =>
             {
                 entity.HasKey(e => e.Id);
+
+                entity.ForMySQLHasCollation("utf8_general_ci");
 
                 entity.ToTable("hrm_test_question_set");
 
@@ -135,6 +58,8 @@ namespace TaapHrmApi.Model
             modelBuilder.Entity<HrmTestQuestion>(entity =>
             {
                 entity.HasKey(e => e.Id);
+
+                entity.ForMySQLHasCollation("utf8_general_ci");
 
                 entity.ToTable("hrm_test_question");
 
@@ -177,6 +102,8 @@ namespace TaapHrmApi.Model
             {
                 entity.HasKey(e => e.Id);
 
+                entity.ForMySQLHasCollation("utf8_general_ci");
+
                 entity.ToTable("hrm_test_choice");
 
                 entity.Property(e => e.Id)
@@ -217,6 +144,8 @@ namespace TaapHrmApi.Model
             {
                 entity.HasKey(e => e.Id);
 
+                entity.ForMySQLHasCollation("utf8_general_ci");
+
                 entity.ToTable("hrm_test_result");
 
                 entity.Property(e => e.Id)
@@ -248,6 +177,8 @@ namespace TaapHrmApi.Model
             modelBuilder.Entity<HrmUser>(entity =>
             {
                 entity.HasKey(e => e.Id);
+
+                entity.ForMySQLHasCollation("utf8_general_ci");
 
                 entity.ToTable("hrm_user");
 
@@ -305,6 +236,8 @@ namespace TaapHrmApi.Model
             modelBuilder.Entity<HrmTestResultDetail>(entity =>
             {
                 entity.HasKey(e => e.Id);
+
+                entity.ForMySQLHasCollation("utf8_general_ci");
 
                 entity.ToTable("hrm_test_result_detail");
 

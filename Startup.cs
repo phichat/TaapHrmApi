@@ -34,9 +34,11 @@ namespace TaapHrmApi {
                     .AllowCredentials());
             });
 
-            services.AddDbContext<db_taapHrmContext> (options => options.UseSqlServer(Configuration.GetConnectionString("taap-api")));
+            //services.AddDbContext<db_taapHrmContext> (options => options.UseSqlServer(Configuration.GetConnectionString("taap-api")));
 
-            //services.AddDbContext<db_taapHrmContext>(options => options.UseMySQL(""));
+            services.AddDbContext<db_taapHrmContext>(options => 
+            options.UseMySQL(Configuration.GetConnectionString("mysql-api")
+            ));
 
             services.AddMvc ().SetCompatibilityVersion (CompatibilityVersion.Version_2_1);
             

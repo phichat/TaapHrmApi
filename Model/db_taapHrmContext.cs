@@ -28,6 +28,8 @@ namespace TaapHrmApi.Model
         {
             modelBuilder.Entity<HrmTestChoice>(entity =>
             {
+                entity.HasKey(e => e.Id);
+
                 entity.ToTable("hrm_test_choice");
 
                 entity.Property(e => e.Id)
@@ -70,6 +72,8 @@ namespace TaapHrmApi.Model
 
             modelBuilder.Entity<HrmTestQuestion>(entity =>
             {
+                entity.HasKey(e => e.Id);
+
                 entity.ToTable("hrm_test_question");
 
                 entity.Property(e => e.Id)
@@ -112,6 +116,8 @@ namespace TaapHrmApi.Model
 
             modelBuilder.Entity<HrmTestQuestionSet>(entity =>
             {
+                entity.HasKey(e => e.Id);
+
                 entity.ToTable("hrm_test_question_set");
 
                 entity.Property(e => e.Id)
@@ -142,6 +148,8 @@ namespace TaapHrmApi.Model
 
             modelBuilder.Entity<HrmTestResult>(entity =>
             {
+                entity.HasKey(e => e.Id);
+
                 entity.ToTable("hrm_test_result");
 
                 entity.Property(e => e.Id)
@@ -179,6 +187,8 @@ namespace TaapHrmApi.Model
 
             modelBuilder.Entity<HrmTestResultDetail>(entity =>
             {
+                entity.HasKey(e => e.Id);
+
                 entity.ToTable("hrm_test_result_detail");
 
                 entity.Property(e => e.Id)

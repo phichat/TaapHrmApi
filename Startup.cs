@@ -1,18 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Builder;
+﻿using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using MySql.Data.EntityFrameworkCore;
-using MySql.Data.EntityFrameworkCore.Extensions;
+using Pomelo.EntityFrameworkCore.MySql.Infrastructure;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Options;
 using TaapHrmApi.Model;
 
 namespace TaapHrmApi {
@@ -36,9 +28,8 @@ namespace TaapHrmApi {
 
             //services.AddDbContext<db_taapHrmContext> (options => options.UseSqlServer(Configuration.GetConnectionString("taap-api")));
 
-            services.AddDbContext<db_taapHrmContext>(options => 
-            options.UseMySQL(Configuration.GetConnectionString("mysql-api")
-            ));
+            services.AddDbContextPool<db_taapHrmContext>(options =>
+                options.UseMySQL(Configuration.GetConnectionString("mysql-api")));
 
             services.AddMvc ().SetCompatibilityVersion (CompatibilityVersion.Version_2_1);
             

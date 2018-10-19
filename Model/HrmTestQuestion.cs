@@ -1,4 +1,6 @@
 ﻿using System;
+using MySql.Data.EntityFrameworkCore.DataAnnotations;
+
 namespace TaapHrmApi.Model
 {
     public class HrmTestQuestion
@@ -13,14 +15,14 @@ namespace TaapHrmApi.Model
         public int UpdateUserPosi { get; set; }
         public DateTime UpdateDatePosi { get; set; }
     }
-
+    
     public class HrmTestQuestionList {
         public int Id { get; set; }
         public string Question { get; set; }
         public string ImgName { get; set; }
         public int IsActive { get; set; }
     }
-
+    
     public class HrmTestQuestionFormBody
     {
         public int Id { get; set; }

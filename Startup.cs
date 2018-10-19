@@ -1,3 +1,4 @@
+
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -34,10 +35,7 @@ namespace TaapHrmApi
             });
 
             //services.AddDbContext<db_taapHrmContext> (options => options.UseSqlServer(Configuration.GetConnectionString("taap-api")));
-
-            //services.AddDbContext<db_taapHrmContext>(options =>
-            //options.UseMySQL(Configuration.GetConnectionString("mysql-api")
-            //));
+            
             services.AddDbContext<db_taapHrmContext>( // replace "YourDbContext" with the class name of your DbContext
               options => options.UseMySql("server=localhost;port=3306;user=root;password=TaapSql@2018;database=hrm", // replace with your Connection String
                   mysqlOptions =>

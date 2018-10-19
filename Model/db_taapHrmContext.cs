@@ -55,6 +55,7 @@ namespace TaapHrmApi.Model
 
                 entity.Property(e => e.IsActive)
                     .HasColumnName("is_active")
+                    .HasDefaultValue(1)
                     .HasColumnType("int(11)");
 
                 entity.Property(e => e.QuestionId)
@@ -94,6 +95,7 @@ namespace TaapHrmApi.Model
 
                 entity.Property(e => e.IsActive)
                     .HasColumnName("is_active")
+                    .HasDefaultValue(1)
                     .HasColumnType("int(11)");
 
                 entity.Property(e => e.Question)
@@ -126,6 +128,7 @@ namespace TaapHrmApi.Model
 
                 entity.Property(e => e.IsActive)
                     .HasColumnName("is_active")
+                    .HasDefaultValue(1)
                     .HasColumnType("int(11)");
 
                 entity.Property(e => e.QuestionSet)

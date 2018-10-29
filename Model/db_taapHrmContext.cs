@@ -22,6 +22,9 @@ namespace TaapHrmApi.Model
         public virtual DbSet<HrmTestResult> HrmTestResults { get; set; }
         public virtual DbSet<HrmTestResultDetail> HrmTestResultDetails { get; set; }
         public virtual DbSet<HrmUser> HrmUsers { get; set; }
+        public virtual DbSet<HrmDepartment> HrmDepartment { get; set; }
+        public virtual DbSet<HrmDepartmentPosition> HrmDepartmentPosition { get; set; }
+        public virtual DbSet<HrmEmployee> HrmEmployee { get; set; }
 
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -303,265 +306,165 @@ namespace TaapHrmApi.Model
                     .HasColumnName("username")
                     .HasColumnType("varchar(150)");
             });
-            //modelBuilder.Entity<HrmTestQuestionSet>(entity =>
-            //{
-            //    entity.HasKey(e => e.Id);
 
-            //    entity.ForMySQLHasCollation("utf8_general_ci");
-
-            //    entity.ToTable("hrm_test_question_set");
-
-            //    entity.Property(e => e.Id)
-            //          .HasColumnName("id");
-
-            //    entity.Property(e => e.QuestionSet)
-            //          .HasColumnName("question_set")
-            //          .ForMySQLHasCollation("utf8_general_ci")
-            //          .HasMaxLength(255);
-
-            //    entity.Property(e => e.TimeOut)
-            //          .HasColumnName("time_out");
-
-            //    entity.Property(e => e.IsActive)
-            //          .HasColumnName("is_active")
-            //          .ForMySQLHasDefaultValue(1);
-
-            //    entity.Property(e => e.UpdateDatePosi)
-            //          .HasColumnName("update_date_posi");
-
-            //    entity.Property(e => e.UpdateUserPosi)
-            //          .HasColumnName("update_user_posi");
-            //});
-
-            //modelBuilder.Entity<HrmTestQuestion>(entity =>
-            //{
-            //    entity.HasKey(e => e.Id);
-
-            //    entity.ForMySQLHasCollation("utf8_general_ci");
-
-            //    entity.ToTable("hrm_test_question");
-
-            //    entity.Property(e => e.Id)
-            //          .HasColumnName("id");
-
-            //    entity.Property(e => e.QuestionSetId)
-            //          .HasColumnName("question_set_id");
-
-            //    entity.Property(e => e.Question)
-            //          .HasColumnName("question")
-            //          .ForMySQLHasCollation("utf8_general_ci")
-            //          .HasMaxLength(255);
-
-            //    entity.Property(e => e.Img)
-            //          .HasColumnName("img")
-            //          .ForMySQLHasCollation("utf8_general_ci")
-            //          .IsUnicode(false);
-
-            //    entity.Property(e => e.ImgName)
-            //          .HasColumnName("imgName")
-            //          .ForMySQLHasCollation("utf8_general_ci")
-            //          .HasMaxLength(255)
-            //          .IsUnicode(false);
-
-            //    entity.Property(e => e.Answer)
-            //          .HasColumnName("answer");
-
-            //    entity.Property(e => e.IsActive)
-            //          .HasColumnName("is_active")
-            //          .HasDefaultValue(1);
-
-            //    entity.Property(e => e.UpdateUserPosi)
-            //          .HasColumnName("update_user_posi");
-
-            //    entity.Property(e => e.UpdateDatePosi)
-            //          .HasColumnName("update_date_posi")
-            //          .HasColumnType("datetime");
-
-            //});
-
-            //modelBuilder.Entity<HrmTestChoice>(entity =>
-            //{
-            //    entity.HasKey(e => e.Id);
-
-            //    entity.ForMySQLHasCollation("utf8_general_ci");
-
-            //    entity.ToTable("hrm_test_choice");
-
-            //    entity.Property(e => e.Id)
-            //          .HasColumnName("id");
-
-            //    entity.Property(e => e.QuestionId)
-            //          .HasColumnName("question_id");
-
-            //    entity.Property(e => e.Choice)
-            //          .HasColumnName("choice")
-            //          .ForMySQLHasCollation("utf8_general_ci")
-            //          .HasMaxLength(255);
-
-            //    entity.Property(e => e.Img)
-            //          .HasColumnName("img")
-            //          .ForMySQLHasCollation("utf8_general_ci")
-            //          .IsUnicode(false);
-
-            //    entity.Property(e => e.ImgName)
-            //          .HasColumnName("imgName")
-            //          .ForMySQLHasCollation("utf8_general_ci")
-            //          .HasMaxLength(255)
-            //          .IsUnicode(false);
-
-            //    entity.Property(e => e.IsActive)
-            //          .HasColumnName("is_active")
-            //          .HasDefaultValue(1);
-
-            //    entity.Property(e => e.AnswerChoice)
-            //          .HasColumnName("answer_choice");
-
-            //    entity.Property(e => e.UpdateDatePosi)
-            //          .HasColumnName("update_date_posi")
-            //          .HasColumnType("datetime");
-
-            //    entity.Property(e => e.UpdateUserPosi)
-            //          .HasColumnName("update_user_posi");
-            //});
-
-            //modelBuilder.Entity<HrmTestResult>(entity =>
-            //{
-            //    entity.HasKey(e => e.Id);
-
-            //    entity.ForMySQLHasCollation("utf8_general_ci");
-
-            //    entity.ToTable("hrm_test_result");
-
-            //    entity.Property(e => e.Id)
-            //          .HasColumnName("id");
-
-            //    entity.Property(e => e.UserId)
-            //          .HasColumnName("user_id");
-
-            //    entity.Property(e => e.QuestionSetId)
-            //          .HasColumnName("question_set_id");
-
-            //    entity.Property(e => e.TimeOut)
-            //          .HasColumnName("time_out");
-
-            //    entity.Property(e => e.TimeUse)
-            //          .HasColumnName("time_use");
-
-            //    entity.Property(e => e.Pass)
-            //          .HasColumnName("pass");
-
-            //    entity.Property(e => e.Fail)
-            //          .HasColumnName("fail");
-
-            //    entity.Property(e => e.Total)
-            //          .HasColumnName("total");
-
-            //});
-
-            //modelBuilder.Entity<HrmUser>(entity =>
-            //{
-            //    entity.HasKey(e => e.Id);
-
-            //    entity.ForMySQLHasCollation("utf8_general_ci");
-
-            //    entity.ToTable("hrm_user");
-
-            //    entity.Property(e => e.UserName)
-            //          .HasColumnName("username")
-            //          .ForMySQLHasCollation("utf8_general_ci")
-            //          .HasMaxLength(150);
-
-            //    entity.Property(e => e.Password)
-            //          .HasColumnName("password")
-            //          .ForMySQLHasCollation("utf8_general_ci")
-            //          .HasMaxLength(255);
-
-            //    entity.Property(e => e.FullName)
-            //          .HasColumnName("fullname")
-            //          .ForMySQLHasCollation("utf8_general_ci")
-            //          .HasMaxLength(100);
-
-            //    entity.Property(e => e.Email)
-            //          .HasColumnName("email")
-            //          .ForMySQLHasCollation("utf8_general_ci")
-            //          .HasMaxLength(100);
-
-            //    entity.Property(e => e.UserType)
-            //          .HasColumnName("user_type");
-
-            //    entity.Property(e => e.CrDate)
-            //          .HasColumnName("crdate")
-            //          .HasColumnType("datetime");
-
-            //    entity.Property(e => e.Enable)
-            //          .HasColumnName("enable")
-            //          .ForMySQLHasCollation("utf8_general_ci")
-            //          .HasMaxLength(1);
-
-            //    entity.Property(e => e.ComId)
-            //          .HasColumnName("com_id");
-
-            //    entity.Property(e => e.Level)
-            //          .HasColumnName("level")
-            //          .ForMySQLHasCollation("utf8_general_ci")
-            //          .HasMaxLength(10);
-
-            //    entity.Property(e => e.UserExpdate)
-            //          .HasColumnName("user_expdate")
-            //          .HasColumnType("date");
-
-            //    entity.Property(e => e.UserSme)
-            //          .HasColumnName("user_sme");
-
-            //    entity.Property(e => e.Tel)
-            //          .HasColumnName("tel")
-            //          .ForMySQLHasCollation("utf8_general_ci")
-            //          .HasMaxLength(10);
-
-            //    entity.Property(e => e.UserIt)
-            //          .HasColumnName("user_it")
-            //          .ForMySQLHasCollation("utf8_general_ci")
-            //          .HasMaxLength(150);
-
-            //});
-
-            //modelBuilder.Entity<HrmTestResultDetail>(entity =>
-            //{
-            //    entity.HasKey(e => e.Id);
-
-            //    entity.ForMySQLHasCollation("utf8_general_ci");
-
-            //    entity.ToTable("hrm_test_result_detail");
-
-            //    entity.Property(e => e.Id)
-            //          .HasColumnName("id");
-
-            //    entity.Property(e => e.TestResultId)
-            //          .HasColumnName("test_result_id");
-
-            //    entity.Property(e => e.QuestionId)
-            //          .HasColumnName("question_id");
-
-            //    entity.Property(e => e.TestedQuestion)
-            //          .HasColumnName("tested_question")
-            //          .ForMySQLHasCollation("utf8_general_ci")
-            //          .HasMaxLength(255);
-
-            //    entity.Property(e => e.TestedAnswer)
-            //          .HasColumnName("tested_answer")
-            //          .ForMySQLHasCollation("utf8_general_ci")
-            //          .HasMaxLength(255);
-
-            //    entity.Property(e => e.Answer)
-            //          .HasColumnName("answer")
-            //          .ForMySQLHasCollation("utf8_general_ci")
-            //          .HasMaxLength(255);
-
-            //    entity.Property(e => e.Result)
-            //          .HasColumnName("result")
-            //          .HasColumnType("bit");
-            //});
-
+            modelBuilder.Entity<HrmDepartment>(entity =>
+            {
+                entity.HasKey(e => e.IdDep);
+
+                entity.ToTable("hrm_department");
+
+                entity.Property(e => e.IdDep)
+                    .HasColumnName("id_dep")
+                    .HasColumnType("int(11)");
+
+                entity.Property(e => e.AddDateDep)
+                    .HasColumnName("add_date_dep")
+                    .HasColumnType("datetime");
+
+                entity.Property(e => e.AddUserDep)
+                    .HasColumnName("add_user_dep")
+                    .HasColumnType("int(11)");
+
+                entity.Property(e => e.CodeNameDep)
+                    .IsRequired()
+                    .HasColumnName("code_name_dep")
+                    .HasColumnType("varchar(10)");
+
+                entity.Property(e => e.NameDep)
+                    .IsRequired()
+                    .HasColumnName("name_dep")
+                    .HasColumnType("varchar(255)");
+
+                entity.Property(e => e.StatusDep)
+                    .HasColumnName("status_dep")
+                    .HasColumnType("int(11)");
+
+                entity.Property(e => e.UpdateDateDep)
+                    .HasColumnName("update_date_dep")
+                    .HasColumnType("timestamp")
+                    .HasDefaultValueSql("'CURRENT_TIMESTAMP'")
+                    .ValueGeneratedOnAddOrUpdate();
+
+                entity.Property(e => e.UpdateUserDep)
+                    .HasColumnName("update_user_dep")
+                    .HasColumnType("int(11)");
+            });
+
+            modelBuilder.Entity<HrmDepartmentPosition>(entity =>
+            {
+                entity.HasKey(e => e.IdDeposi);
+
+                entity.ToTable("hrm_department_position");
+
+                entity.Property(e => e.IdDeposi)
+                    .HasColumnName("id_deposi")
+                    .HasColumnType("int(11)");
+
+                entity.Property(e => e.AddDateDeposi)
+                    .HasColumnName("add_date_deposi")
+                    .HasColumnType("datetime");
+
+                entity.Property(e => e.AddUserDeposi)
+                    .HasColumnName("add_user_deposi")
+                    .HasColumnType("int(11)");
+
+                entity.Property(e => e.CodeNameDeposi)
+                    .IsRequired()
+                    .HasColumnName("code_name_deposi")
+                    .HasColumnType("varchar(10)");
+
+                entity.Property(e => e.DepIdDeposi)
+                    .HasColumnName("dep_id_deposi")
+                    .HasColumnType("int(11)");
+
+                entity.Property(e => e.LevelDeposi)
+                    .HasColumnName("level_deposi")
+                    .HasColumnType("int(11)");
+
+                entity.Property(e => e.NameDeposi)
+                    .IsRequired()
+                    .HasColumnName("name_deposi")
+                    .HasColumnType("varchar(255)");
+
+                entity.Property(e => e.PetitionDeposi)
+                    .HasColumnName("petition_deposi")
+                    .HasColumnType("int(11)");
+
+                entity.Property(e => e.RoleDeposi)
+                    .HasColumnName("role_deposi")
+                    .HasColumnType("int(11)");
+
+                entity.Property(e => e.StatusDeposi)
+                    .HasColumnName("status_deposi")
+                    .HasColumnType("int(11)");
+
+                entity.Property(e => e.UpdateDateDeposi)
+                    .HasColumnName("update_date_deposi")
+                    .HasColumnType("timestamp")
+                    .HasDefaultValueSql("'CURRENT_TIMESTAMP'")
+                    .ValueGeneratedOnAddOrUpdate();
+
+                entity.Property(e => e.UpdateUserDeposi)
+                    .HasColumnName("update_user_deposi")
+                    .HasColumnType("int(11)");
+            });
+
+            modelBuilder.Entity<HrmEmployee>(entity =>
+            {
+                entity.HasKey(e => e.IdEmp);
+
+                entity.ToTable("hrm_employee");
+
+                entity.Property(e => e.IdEmp)
+                    .HasColumnName("id_emp")
+                    .HasColumnType("int(11)");
+
+                entity.Property(e => e.AddDateEmp)
+                    .HasColumnName("add_date_emp")
+                    .HasColumnType("datetime");
+
+                entity.Property(e => e.AddUserEmp)
+                    .HasColumnName("add_user_emp")
+                    .HasColumnType("int(11)");
+
+                entity.Property(e => e.DepartPosiIdEmp)
+                    .HasColumnName("depart_posi_id_emp")
+                    .HasColumnType("int(11)");
+
+                entity.Property(e => e.FirstnameEmp)
+                    .IsRequired()
+                    .HasColumnName("firstname_emp")
+                    .HasColumnType("varchar(255)");
+
+                entity.Property(e => e.LastnameEmp)
+                    .IsRequired()
+                    .HasColumnName("lastname_emp")
+                    .HasColumnType("varchar(255)");
+
+                entity.Property(e => e.NoAzEmp)
+                    .IsRequired()
+                    .HasColumnName("no_az_emp")
+                    .HasColumnType("varchar(10)");
+
+                entity.Property(e => e.NoNumberEmp)
+                    .IsRequired()
+                    .HasColumnName("no_number_emp")
+                    .HasColumnType("varchar(10)");
+
+                entity.Property(e => e.StatusEmp)
+                    .HasColumnName("status_emp")
+                    .HasColumnType("int(11)");
+
+                entity.Property(e => e.UpdateDateEmp)
+                    .HasColumnName("update_date_emp")
+                    .HasColumnType("timestamp")
+                    .HasDefaultValueSql("'CURRENT_TIMESTAMP'")
+                    .ValueGeneratedOnAddOrUpdate();
+
+                entity.Property(e => e.UpdateUserEmp)
+                    .HasColumnName("update_user_emp")
+                    .HasColumnType("int(11)");
+            });
         }
     }
 }

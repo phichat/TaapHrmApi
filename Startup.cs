@@ -25,17 +25,18 @@ namespace TaapHrmApi
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddCors(options =>
+            services.AddCors(options => options.AddPolicy("CorsPolicy", builder =>
             {
-                options.AddPolicy("CorsPolicy",
-                    builder => builder.AllowAnyOrigin()
+                builder
                     .AllowAnyMethod()
                     .AllowAnyHeader()
-                    .AllowCredentials());
-            });
+                    .AllowAnyOrigin()
+                    .AllowCredentials();
+            }));
 
-            //services.AddDbContext<db_taapHrmContext> (options => options.UseSqlServer(Configuration.GetConnectionString("taap-api")));
-            
+            //services.AddDbContext<db_taapHrmContext> (options => 
+            //options.UseSqlServer(Configuration.GetConnectionString("amp-cloud-api")));
+
             services.AddDbContext<db_taapHrmContext>( // replace "YourDbContext" with the class name of your DbContext
               options => options.UseMySql("server=localhost;port=3306;user=root;password=TaapSql@2018;database=hrm", // replace with your Connection String
                   mysqlOptions =>
@@ -54,19 +55,21 @@ namespace TaapHrmApi
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
-                app.UseCors(builder =>
-                {
-                    builder.WithOrigins("http://localhost:4200")
-                           .AllowAnyOrigin()
-                           .AllowAnyHeader()
-                           .AllowAnyMethod();
-                });
+
             }
             else
             {
                 app.UseHsts();
             }
 
+            //app.UseCors("CorsPolicy");
+            app.UseCors(builder =>
+            {
+                builder.WithOrigins("http://localhost:4200")
+                       .AllowAnyOrigin()
+                       .AllowAnyHeader()
+                       .AllowAnyMethod();
+            });
             app.UseHttpsRedirection();
             app.UseMvc();
         }

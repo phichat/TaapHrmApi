@@ -25,7 +25,14 @@ namespace TaapHrmApi.Controllers
         [HttpGet("GetUserById")]
         public async Task<IActionResult> GetUserByIdAsync(string id) {
             try {
-                var u = await ctx.HrmUsers.ToListAsync();
+                var u = await (from db in ctx.HrmUsers
+                         select new
+                         {
+                             db.Id,
+                             db.UserName,
+                             db.UserType
+                         }).ToListAsync();
+
                 MD5 md5Hash = MD5.Create();
                 var _u = new UsersRes();
 
@@ -60,10 +67,11 @@ namespace TaapHrmApi.Controllers
 
                                    select new
                                    {
-                                       dp.NameDeposi
+                                       dp.NameDeposi,
+                                       dept.NameDep
                                    }).FirstOrDefault();
 
-                        _u.VtNameDeposit = dep.NameDeposi;
+                        _u.VtNameDeposit = $"{dep.NameDeposi} {dep.NameDep}";
                         break;
 
                     default:

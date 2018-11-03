@@ -58,11 +58,20 @@ namespace TaapHrmApi.Controllers
         }
 
         [HttpGet("GetQuestionRandom")]
-        public async Task<IActionResult> GetQuestionRandom(int id) {
+        public async Task<IActionResult> GetQuestionRandom(int questionSetId, int userId) {
             try
             {
+
+                var result = ctx.HrmTestResults
+                                .FirstOrDefault(x => x.QuestionSetId == questionSetId && x.UserId == userId);
+
+                // ถ้าทำแบบทดสอบแล้ว และ สถานะ อนุญาติให้ทำแบบทดสอบ = 0
+                if (result != null && result.IsActive == 0) 
+                    return NoContent();
+                
+
                 var qs = (from tq in ctx.HrmTestQuestionSets
-                          where tq.Id == id
+                          where tq.Id == questionSetId
                           select new HrmTestQuestionSetRandom
                           {
                               Id = tq.Id,
@@ -73,7 +82,7 @@ namespace TaapHrmApi.Controllers
                 if (qs == null) return NotFound();
 
                 var q = await (from tq in ctx.HrmTestQuestions
-                               where tq.QuestionSetId == id && tq.IsActive == 1
+                               where tq.QuestionSetId == questionSetId && tq.IsActive == 1
                                select new HrmTestQuestionFormBody
                                {
                                    Id = tq.Id,
@@ -376,6 +385,24 @@ namespace TaapHrmApi.Controllers
                     return StatusCode(304);
 
                 c.IsActive = 0;
+                ctx.SaveChanges();
+
+                return Ok();
+
+            } catch(Exception ex) {
+                return StatusCode(500, ex.Message);
+            }
+        }
+
+
+        [HttpPut("ActiveResult")]
+        public IActionResult ActiveTestResult(int questionSetId, int userId, int isActive) {
+            try {
+                var r = ctx.HrmTestResults.FirstOrDefault(x => x.UserId == userId && x.QuestionSetId == questionSetId);
+                if (r == null)
+                    return StatusCode(304);
+
+                r.IsActive = isActive;
                 ctx.SaveChanges();
 
                 return Ok();

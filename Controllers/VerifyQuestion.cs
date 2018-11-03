@@ -143,6 +143,7 @@ namespace TaapHrmApi.Controllers
 
         }
 
+
         [HttpGet("GetQuestionResult")]
         public IActionResult GetQuestionResult(int questionSetId, int userId) {
             try {
@@ -162,7 +163,8 @@ namespace TaapHrmApi.Controllers
                                   FullName = u.FullName,
                                   Pass = r.Pass,
                                   Fail = r.Fail,
-                                  Total = r.Total
+                                  Total = r.Total,
+                                  IsActive = r.IsActive
                               })
                     .OrderByDescending(x => x.Id)
                     .FirstOrDefault(x => x.QuestionSetId == questionSetId && x.UserId == userId);

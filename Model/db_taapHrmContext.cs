@@ -189,6 +189,11 @@ namespace TaapHrmApi.Model
                 entity.Property(e => e.UserId)
                     .HasColumnName("user_id")
                     .HasColumnType("int(11)");
+
+                entity.Property(e => e.IsActive)
+                      .HasColumnName("is_active")
+                      .HasDefaultValue(0)
+                      .HasColumnType("int(1)");
             });
 
             modelBuilder.Entity<HrmTestResultDetail>(entity =>

@@ -177,22 +177,22 @@ namespace TaapHrmApi.Controllers
 
                 return Ok(result);
 
-            } catch(Exception ex) {
+            } catch (Exception ex) {
                 return StatusCode(500, ex.Message);
             }
         }
 
 
         [HttpPut("ActiveTestResult")]
-        public IActionResult ActiveTestResult(int id, int isActive)
+        public IActionResult ActiveTestResult([FromBody] ActiveFromBody from)
         {
             try
             {
-                var r = ctx.HrmTestResults.FirstOrDefault(x => x.Id == id);
+                var r = ctx.HrmTestResults.SingleOrDefault(x => x.Id == from.Id);
                 if (r == null)
                     return StatusCode(304);
 
-                r.IsActive = isActive;
+                r.IsActive = from.IsActive;
                 ctx.SaveChanges();
 
                 return Ok();
@@ -202,6 +202,13 @@ namespace TaapHrmApi.Controllers
             {
                 return StatusCode(500, ex.Message);
             }
+        }
+
+        public class ActiveFromBody
+        {
+            public int Id { get; set; }
+            public int IsActive { get; set; }
+
         }
     }
 }

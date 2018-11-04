@@ -395,24 +395,6 @@ namespace TaapHrmApi.Controllers
         }
 
 
-        [HttpPut("ActiveResult")]
-        public IActionResult ActiveTestResult(int questionSetId, int userId, int isActive) {
-            try {
-                var r = ctx.HrmTestResults.FirstOrDefault(x => x.UserId == userId && x.QuestionSetId == questionSetId);
-                if (r == null)
-                    return StatusCode(304);
-
-                r.IsActive = isActive;
-                ctx.SaveChanges();
-
-                return Ok();
-
-            } catch(Exception ex) {
-                return StatusCode(500, ex.Message);
-            }
-        }
-
-
         public class ActiveFromBody {
             public int Id { get; set; }
             public int IsActive { get; set; }

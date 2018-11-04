@@ -181,5 +181,27 @@ namespace TaapHrmApi.Controllers
                 return StatusCode(500, ex.Message);
             }
         }
+
+
+        [HttpPut("ActiveTestResult")]
+        public IActionResult ActiveTestResult(int id, int isActive)
+        {
+            try
+            {
+                var r = ctx.HrmTestResults.FirstOrDefault(x => x.Id == id);
+                if (r == null)
+                    return StatusCode(304);
+
+                r.IsActive = isActive;
+                ctx.SaveChanges();
+
+                return Ok();
+
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, ex.Message);
+            }
+        }
     }
 }

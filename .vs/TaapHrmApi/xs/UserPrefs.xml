@@ -1,11 +1,11 @@
 ﻿<Properties StartupConfiguration="{4884E1A3-57F5-41F8-89C5-23392B9153F3}|Default">
-  <MonoDevelop.Ide.Workbench ActiveDocument="Model/HrmTestQuestionSet.cs">
+  <MonoDevelop.Ide.Workbench ActiveDocument="Controllers/QuestionController.cs">
     <Files>
-      <File FileName="Controllers/VerifyQuestion.cs" Line="1" Column="1" />
-      <File FileName="Controllers/QuestionController.cs" Line="76" Column="35" />
+      <File FileName="Controllers/VerifyQuestion.cs" Line="144" Column="10" />
+      <File FileName="Controllers/QuestionController.cs" Line="60" Column="36" />
       <File FileName="Model/HrmTestQuestionSet.cs" Line="1" Column="14" />
-      <File FileName="Model/db_taapHrmContext.cs" Line="179" Column="47" />
-      <File FileName="Model/HrmTestResult.cs" Line="14" Column="19" />
+      <File FileName="Model/db_taapHrmContext.cs" Line="186" Column="44" />
+      <File FileName="Model/HrmTestResult.cs" Line="41" Column="42" />
     </Files>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />

@@ -22,6 +22,7 @@ namespace TaapHrmApi.Model
         public virtual DbSet<HrmTestResult> HrmTestResults { get; set; }
         public virtual DbSet<HrmTestResultDetail> HrmTestResultDetails { get; set; }
         public virtual DbSet<HrmUser> HrmUsers { get; set; }
+        public virtual DbSet<HrmUserCandidate> HrmUserCandidate { get; set; }
         public virtual DbSet<HrmDepartment> HrmDepartment { get; set; }
         public virtual DbSet<HrmDepartmentPosition> HrmDepartmentPosition { get; set; }
         public virtual DbSet<HrmEmployee> HrmEmployee { get; set; }
@@ -353,6 +354,55 @@ namespace TaapHrmApi.Model
                 entity.Property(e => e.UpdateUserDep)
                     .HasColumnName("update_user_dep")
                     .HasColumnType("int(11)");
+            });
+
+            modelBuilder.Entity<HrmUserCandidate>(entity =>
+            {
+                entity.HasKey(e => e.IdCan);
+
+                entity.ToTable("hrm_user_candidate");
+
+                entity.Property(e => e.IdCan)
+                    .HasColumnName("id_can")
+                    .HasColumnType("int(11)");
+
+                entity.Property(e => e.AddDateCan)
+                    .HasColumnName("add_date_can")
+                    .HasColumnType("datetime");
+
+                entity.Property(e => e.EmailCan)
+                    .IsRequired()
+                    .HasColumnName("email_can")
+                    .HasColumnType("varchar(255)");
+
+                entity.Property(e => e.FullnameCan)
+                    .IsRequired()
+                    .HasColumnName("fullname_can")
+                    .HasColumnType("varchar(255)");
+
+                entity.Property(e => e.PasswordCan)
+                    .IsRequired()
+                    .HasColumnName("password_can")
+                    .HasColumnType("varchar(255)");
+
+                entity.Property(e => e.StatusCan)
+                    .HasColumnName("status_can")
+                    .HasColumnType("int(11)");
+
+                entity.Property(e => e.UpdateDateCan)
+                    .HasColumnName("update_date_can")
+                    .HasColumnType("timestamp")
+                    .HasDefaultValueSql("'CURRENT_TIMESTAMP'")
+                    .ValueGeneratedOnAddOrUpdate();
+
+                entity.Property(e => e.UpdateUserCan)
+                    .HasColumnName("update_user_can")
+                    .HasColumnType("int(11)");
+
+                entity.Property(e => e.UsernameCan)
+                    .IsRequired()
+                    .HasColumnName("username_can")
+                    .HasColumnType("varchar(255)");
             });
 
             modelBuilder.Entity<HrmDepartmentPosition>(entity =>

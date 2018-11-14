@@ -149,7 +149,7 @@ namespace TaapHrmApi.Controllers
             try {
 
                 var result = (from r in ctx.HrmTestResults
-                              join u in ctx.HrmUsers on r.UserId equals u.Id
+                              join u in ctx.HrmUserCandidate on r.UserId equals u.IdCan
                               join q in ctx.HrmTestQuestionSets on r.QuestionSetId equals q.Id
 
                               select new HrmTestVerifyQuestionResponse
@@ -160,7 +160,7 @@ namespace TaapHrmApi.Controllers
                                   TimeOut = r.TimeOut,
                                   TimeUse = r.TimeUse,
                                   UserId = r.UserId,
-                                  FullName = u.FullName,
+                                  FullName = u.FullnameCan,
                                   Pass = r.Pass,
                                   Fail = r.Fail,
                                   Total = r.Total,

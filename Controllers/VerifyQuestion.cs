@@ -91,6 +91,7 @@ namespace TaapHrmApi.Controllers
                         checkResult.Pass = pass;
                         checkResult.Fail = fail;
                         checkResult.Total = totalQuestion;
+                        checkResult.IsActive = 0;
 
                         ctx.HrmTestResults.Update(checkResult);
                         await ctx.SaveChangesAsync();
@@ -105,7 +106,8 @@ namespace TaapHrmApi.Controllers
                             TimeUse = value.TimeUse,
                             Pass = pass,
                             Fail = fail,
-                            Total = totalQuestion
+                            Total = totalQuestion,
+                            IsActive = 0
                         };
 
                         await ctx.HrmTestResults.AddAsync(checkResult);

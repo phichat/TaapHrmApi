@@ -28,7 +28,7 @@ namespace TaapHrmApi.Controllers
 
         // POST api/values
         [HttpPost("CreateVerifyQuestion")]
-        public IActionResult CreateVerifyQuestion([FromBody]HrmTestVerifyQuestion value)
+        public async Task<IActionResult> CreateVerifyQuestion([FromBody]HrmTestVerifyQuestion value)
         {
             using (var trans = ctx.Database.BeginTransaction())
             {
@@ -45,13 +45,13 @@ namespace TaapHrmApi.Controllers
                     foreach (var item in questions)
                     {
                         // คำถาม
-                        var qq = ctx.HrmTestQuestions.SingleOrDefault(x => x.Id == item.QuestionId);
+                        var qq = ctx.HrmTestQuestions.FirstOrDefault(x => x.Id == item.QuestionId);
 
                         // คำตอบที่ ผู้ทดสอบเลือก 
-                        var testedAnswer = ctx.HrmTestChoices.SingleOrDefault(x => x.QuestionId == item.QuestionId && x.AnswerChoice == item.Answer);
+                        var testedAnswer = ctx.HrmTestChoices.FirstOrDefault(x => x.QuestionId == item.QuestionId && x.AnswerChoice == item.Answer);
 
                         // คำตอบที่ถูกต้อง
-                        var answer = ctx.HrmTestChoices.SingleOrDefault(x => x.QuestionId == qq.Id && x.AnswerChoice == qq.Answer);
+                        var answer = ctx.HrmTestChoices.FirstOrDefault(x => x.QuestionId == qq.Id && x.AnswerChoice == qq.Answer);
 
                         var rd = new HrmTestResultDetail
                         {
@@ -78,7 +78,7 @@ namespace TaapHrmApi.Controllers
 
                     // 2 บันทึกแบบทดสอบ
                     // 2.1 เช็คว่ามีบันทึกแบบทดสอบ แล้วหรือไม่
-                    var checkResult = ctx.HrmTestResults.SingleOrDefault(x => x.UserId == value.UserId && x.QuestionSetId == value.QuestionSetId);
+                    var checkResult = ctx.HrmTestResults.FirstOrDefault(x => x.UserId == value.UserId && x.QuestionSetId == value.QuestionSetId);
 
                     // 2.2 ถ้ามีให้อัพเดท
                     // 2.3 ถ้าไม่มีให้บันทึก
@@ -93,7 +93,7 @@ namespace TaapHrmApi.Controllers
                         checkResult.Total = totalQuestion;
 
                         ctx.HrmTestResults.Update(checkResult);
-                        ctx.SaveChanges();
+                        await ctx.SaveChangesAsync();
                     }
                     else
                     {
@@ -108,8 +108,8 @@ namespace TaapHrmApi.Controllers
                             Total = totalQuestion
                         };
 
-                        ctx.HrmTestResults.Add(checkResult);
-                        ctx.SaveChanges();
+                        await ctx.HrmTestResults.AddAsync(checkResult);
+                        await ctx.SaveChangesAsync();
                     }
 
                     // 3 ตรวจสอบว่า กรายละเอียดการทำแบบทดสอบ แล้วหรือไม่
@@ -119,7 +119,7 @@ namespace TaapHrmApi.Controllers
                     if (checkResultDetail != null)
                     {
                         ctx.HrmTestResultDetails.RemoveRange(checkResultDetail);
-                        ctx.SaveChanges();
+                        await ctx.SaveChangesAsync();
                     }
 
                     // 3.2 บันทึกรายละเอียดการทำแบบทดสอบใหม่เข้าไป
@@ -127,8 +127,8 @@ namespace TaapHrmApi.Controllers
                     {
                         x.TestResultId = checkResult.Id;
                     });
-                    ctx.HrmTestResultDetails.AddRange(resultDetail);
-                    ctx.SaveChanges();
+                    await ctx.HrmTestResultDetails.AddRangeAsync(resultDetail);
+                    await ctx.SaveChangesAsync();
 
                     // 4 อัพเดทสถานะการทำแบบทดสอบใน hrm_candidate_manpower
                     var hrmCanditdateManpower = ctx.HrmCandidateManpower
@@ -139,7 +139,7 @@ namespace TaapHrmApi.Controllers
                         hrmCanditdateManpower.StatusProcessCanMan = 4;
                         hrmCanditdateManpower.StatusCanMan = 1;
                         ctx.Update(hrmCanditdateManpower);
-                        ctx.SaveChanges();
+                        await ctx.SaveChangesAsync();
                     }
 
                     trans.Commit();

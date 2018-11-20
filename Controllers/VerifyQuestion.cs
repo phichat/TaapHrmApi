@@ -130,6 +130,18 @@ namespace TaapHrmApi.Controllers
                     ctx.HrmTestResultDetails.AddRange(resultDetail);
                     ctx.SaveChanges();
 
+                    // 4 อัพเดทสถานะการทำแบบทดสอบใน hrm_candidate_manpower
+                    var hrmCanditdateManpower = ctx.HrmCandidateManpower
+                        .FirstOrDefault(x => x.CanIdCanMan == value.UserId && int.Parse(x.SetTestCanMan) == value.QuestionSetId);
+
+                    if (hrmCanditdateManpower != null)
+                    {
+                        hrmCanditdateManpower.StatusProcessCanMan = 4;
+                        hrmCanditdateManpower.StatusCanMan = 1;
+                        ctx.Update(hrmCanditdateManpower);
+                        ctx.SaveChanges();
+                    }
+
                     trans.Commit();
 
                     return Ok();

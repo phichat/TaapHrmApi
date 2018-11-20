@@ -26,6 +26,7 @@ namespace TaapHrmApi.Model
         public virtual DbSet<HrmDepartment> HrmDepartment { get; set; }
         public virtual DbSet<HrmDepartmentPosition> HrmDepartmentPosition { get; set; }
         public virtual DbSet<HrmEmployee> HrmEmployee { get; set; }
+        public virtual DbSet<HrmCandidateManpower> HrmCandidateManpower { get; set; }
 
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -518,6 +519,79 @@ namespace TaapHrmApi.Model
 
                 entity.Property(e => e.UpdateUserEmp)
                     .HasColumnName("update_user_emp")
+                    .HasColumnType("int(11)");
+            });
+
+            modelBuilder.Entity<HrmCandidateManpower>(entity =>
+            {
+                entity.HasKey(e => e.IdCanMan);
+
+                entity.ToTable("hrm_candidate_manpower");
+
+                entity.Property(e => e.IdCanMan)
+                    .HasColumnName("id_can_man")
+                    .HasColumnType("int(11)");
+
+                entity.Property(e => e.CanIdCanMan)
+                    .HasColumnName("can_id_can_man")
+                    .HasColumnType("int(11)");
+
+                entity.Property(e => e.DateInterviewCanMan)
+                    .HasColumnName("date_interview_can_man")
+                    .HasColumnType("varchar(20)");
+
+                entity.Property(e => e.DateWorkCanMan)
+                    .HasColumnName("date_work_can_man")
+                    .HasColumnType("varchar(20)");
+
+                entity.Property(e => e.DetailsInterviewCanMan)
+                    .HasColumnName("details_interview_can_man")
+                    .HasColumnType("text");
+
+                entity.Property(e => e.DetailsWorkCanMan)
+                    .HasColumnName("details_work_can_man")
+                    .HasColumnType("text");
+
+                entity.Property(e => e.ManIdCanMan)
+                    .HasColumnName("man_id_can_man")
+                    .HasColumnType("int(11)");
+
+                entity.Property(e => e.ScoreInterviewCanMan)
+                    .HasColumnName("score_interview_can_man")
+                    .HasColumnType("varchar(20)");
+
+                entity.Property(e => e.ScoreProfileCanMan)
+                    .HasColumnName("score_profile_can_man")
+                    .HasColumnType("varchar(20)");
+
+                entity.Property(e => e.SentEmailTestCanMan)
+                    .HasColumnName("sent_email_test_can_man")
+                    .HasColumnType("int(11)");
+
+                entity.Property(e => e.SentTestByCanMan)
+                    .HasColumnName("sent_test_by_can_man")
+                    .HasColumnType("int(11)");
+
+                entity.Property(e => e.SetTestCanMan)
+                    .HasColumnName("set_test_can_man")
+                    .HasColumnType("varchar(20)");
+
+                entity.Property(e => e.StatusCanMan)
+                    .HasColumnName("status_can_man")
+                    .HasColumnType("int(11)");
+
+                entity.Property(e => e.StatusProcessCanMan)
+                    .HasColumnName("status_process_can_man")
+                    .HasColumnType("int(11)");
+
+                entity.Property(e => e.UpdateDateCanMan)
+                    .HasColumnName("update_date_can_man")
+                    .HasColumnType("timestamp")
+                    .HasDefaultValueSql("'CURRENT_TIMESTAMP'")
+                    .ValueGeneratedOnAddOrUpdate();
+
+                entity.Property(e => e.UpdateUserCanMan)
+                    .HasColumnName("update_user_can_man")
                     .HasColumnType("int(11)");
             });
         }
